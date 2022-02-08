@@ -1,5 +1,5 @@
 import sys
-
+from tkinter import *
 from guet.commands import CommandMap
 from guet.commands.add import AddCommandFactory
 from guet.commands.get import GetCommandFactory
@@ -13,6 +13,7 @@ from guet.files import FileSystem
 from guet.git import GitProxy
 from guet.util import add_command_help_if_invalid_command_given
 from guet.util.errors import log_on_error
+
 
 
 @log_on_error

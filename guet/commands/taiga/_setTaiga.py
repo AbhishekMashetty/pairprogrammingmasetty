@@ -25,31 +25,39 @@ class SetTaiga(Action):
         # found = [c for c in self.committers.all() if c.initials in lowercase_args]
         # self.current_committers.set(found)
         # printer = CommittersPrinter(initials_only=False)
+
         print('WIP: Taiga tool integration')
         print(args)
+        if args[0]=='connect':
         # connect
-        self.login(args[0], args[1])
-        #print(self.authToken)
-        # printer.print(found)
-        # members
-        self.getMembers(args[2])
+            self.login(args[1], args[2])
+        elif args[0]=='members':
+            self.getMembers(args[1])
+
 
     
+
     def get(self, url):
         req = http.Request(url = url)
         if self.authToken:
-            req.add_header("Authorization", "Bearer " + self.authToken)
+            f=open('config.json')
+            auth = json.load(f)
+            if auth["authToken"]:
+                req.add_header("Authorization", "Bearer " + auth["authToken"])
+            f.close()
         with http.urlopen(req) as res:
             data = json.loads(res.read().decode('utf-8'))
             #print(data)
             return data
 
     def post(self, url, body):
+        f=open('config.json')
+        auth = json.load(f)
         body = json.dumps(body)
         req = http.Request(url=url, data=bytes(
             body.encode("utf-8")), method="POST")
         req.add_header("Content-type", "application/json; charset=UTF-8") 
-        if len(self.authToken): req.add_header("Authorization", "Bearer " + self.authToken)
+        if len(auth["authToken"]): req.add_header("Authorization", "Bearer " + auth["authToken"])
         with http.urlopen(req) as res:
             data = json.loads(res.read().decode("utf-8"))
             #print(data)
@@ -73,4 +81,6 @@ class SetTaiga(Action):
             'type': 'normal'
         }
         self.authToken = self.post(self.loginURL, data)['auth_token']
+        with open('config.json', 'w') as f:
+            json.dump({"authToken": self.authToken}, f )
         #f.close()

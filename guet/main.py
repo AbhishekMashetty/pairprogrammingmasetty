@@ -13,6 +13,7 @@ from guet.committers import Committers2, CurrentCommitters
 from guet.files import FileSystem
 from guet.git import GitProxy
 from guet.util import add_command_help_if_invalid_command_given
+from guet.commands.gui import GuiCommandFactory
 from guet.util.errors import log_on_error
 
 
@@ -43,6 +44,8 @@ def main():
     command_map.add_command('yeet',
                             YeetCommandFactory(file_system, git),
                             'Remove guet configurations')
+    command_map.add_command('GUI', GuiCommandFactory(
+        file_system, committers, current_committers, git), 'Integrate GUI')
 
 
     command_map.set_default(UnknownCommandFactory(command_map))

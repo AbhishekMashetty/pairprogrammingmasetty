@@ -11,7 +11,7 @@ class PostCommit(Action):
 
     def execute(self, args: List[str]):
         found = self.current_committers.get()
-        if len(found) > 1:
-            first = found.pop(0)
-            found.append(first)
-            self.current_committers.set(found)
+        # if len(found) > 1:
+        #     first = found.pop(0)
+        #     found.append(first)
+        #     self.current_committers.set(found)

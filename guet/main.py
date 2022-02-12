@@ -8,6 +8,7 @@ from guet.commands.init import InitCommandFactory
 from guet.commands.remove import RemoveCommandFactory
 from guet.commands.set import SetCommittersCommand
 from guet.commands.yeet import YeetCommandFactory
+from guet.commands.taiga import TaigaCommands
 from guet.committers import Committers2, CurrentCommitters
 from guet.files import FileSystem
 from guet.git import GitProxy
@@ -37,9 +38,12 @@ def main():
         file_system, committers, current_committers, git), 'Set committers for current repository')
     command_map.add_command('remove', RemoveCommandFactory(
         file_system, committers), 'Remove committer')
+    command_map.add_command('taiga', TaigaCommands(
+        file_system, committers, current_committers, git), 'Integrate taiga')
     command_map.add_command('yeet',
                             YeetCommandFactory(file_system, git),
                             'Remove guet configurations')
+
 
     command_map.set_default(UnknownCommandFactory(command_map))
 

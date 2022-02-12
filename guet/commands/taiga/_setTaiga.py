@@ -28,11 +28,12 @@ class SetTaiga(Action):
 
         print('WIP: Taiga tool integration')
         print(args)
-        if args[0]=='connect':
-        # connect
-            self.login(args[1], args[2])
-        elif args[0]=='members':
-            self.getMembers(args[1])
+        if args[0]=='members':
+            user = input('Enter username:')
+            pwd = input('Password:')
+            self.login(user, pwd)
+            slug = input('Project slug:')
+            self.getMembers(slug)
 
 
     
@@ -40,29 +41,23 @@ class SetTaiga(Action):
     def get(self, url):
         req = http.Request(url = url)
         if self.authToken:
-            f=open('config.json')
-            auth = json.load(f)
-            if auth["authToken"]:
-                req.add_header("Authorization", "Bearer " + auth["authToken"])
-            f.close()
+            req.add_header("Authorization", "Bearer " + self.authToken)
         with http.urlopen(req) as res:
             data = json.loads(res.read().decode('utf-8'))
             #print(data)
             return data
 
     def post(self, url, body):
-        f=open('config.json')
-        auth = json.load(f)
         body = json.dumps(body)
         req = http.Request(url=url, data=bytes(
             body.encode("utf-8")), method="POST")
         req.add_header("Content-type", "application/json; charset=UTF-8") 
-        if len(auth["authToken"]): req.add_header("Authorization", "Bearer " + auth["authToken"])
+        if len(self.authToken): req.add_header("Authorization", "Bearer " + self.authToken)
         with http.urlopen(req) as res:
             data = json.loads(res.read().decode("utf-8"))
             #print(data)
             return data
-    
+
     def getMembers(self, projectSlug):
         projectData = self.get(self.getProjectURL + projectSlug)
         print('This project has ' + str(len(projectData['members'])) +' members. They are:')
@@ -72,7 +67,7 @@ class SetTaiga(Action):
 
     def login(self, username, password):
         #f = open('config.json')
-    
+
         #config = json.load(f)
 
         data = {
@@ -81,6 +76,4 @@ class SetTaiga(Action):
             'type': 'normal'
         }
         self.authToken = self.post(self.loginURL, data)['auth_token']
-        with open('config.json', 'w') as f:
-            json.dump({"authToken": self.authToken}, f )
-        #f.close()
+        #f.close() 

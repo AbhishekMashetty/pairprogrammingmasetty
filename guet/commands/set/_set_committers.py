@@ -15,7 +15,17 @@ class SetCommittersAction(Action):
 
     def execute(self, args: List[str]):
         lowercase_args = [arg.lower() for arg in args]
-        found = [c for c in self.committers.all() if c.initials in lowercase_args]
+        initialsList = []
+        for c in self.committers.all():
+            initialsList.append(c.initials)
+        found = []
+        allCommitters = self.committers.all()
+        for arg in lowercase_args:
+            if arg in initialsList:
+                for c in allCommitters:
+                    if c.initials == arg:
+                        found.append(c)
+        #found = [c for c in self.committers.all() if c.initials in lowercase_args]
         self.current_committers.set(found)
         printer = CommittersPrinter(initials_only=False)
         print('Committers set to:')

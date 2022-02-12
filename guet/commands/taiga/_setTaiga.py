@@ -26,8 +26,8 @@ class SetTaiga(Action):
         # self.current_committers.set(found)
         # printer = CommittersPrinter(initials_only=False)
 
-        print('WIP: Taiga tool integration')
-        print(args)
+        #print('WIP: Taiga tool integration')
+        #print(args)
         if args[0]=='members':
             user = input('Enter username:')
             pwd = input('Password:')

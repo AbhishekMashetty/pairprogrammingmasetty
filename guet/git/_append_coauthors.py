@@ -3,8 +3,21 @@ from typing import List
 from guet.committers.committer import Committer
 
 
+# def _co_authored_lines(committers: List[Committer]) -> List[str]:
+#     return [f'Co-authored-by: {committer.name} <{committer.email}>' for committer in committers]
+
 def _co_authored_lines(committers: List[Committer]) -> List[str]:
-    return [f'Co-authored-by: {committer.name} <{committer.email}>' for committer in committers]
+    firstCommitter = True
+    _co_authors_list = []
+    for committer in committers:
+        if firstCommitter:
+            firstCommitter = False
+            _co_authors_list.append(f'Co-authored-by: {committer.name} <{committer.email}> (Driver)')
+            #return f'Co-authored-by: {committer.name} <{committer.email}> (Driver)'
+        else:
+            _co_authors_list.append(f'Co-authored-by: {committer.name} <{committer.email}> (Observer)')
+            #return f'Co-authored-by: {committer.name} <{committer.email}> (Observer)'
+    return _co_authors_list
 
 
 def _remove_co_authored_lines(old_message: List[str]) -> List[str]:

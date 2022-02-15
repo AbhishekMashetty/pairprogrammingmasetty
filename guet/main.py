@@ -1,5 +1,5 @@
 import sys
-
+from tkinter import *
 from guet.commands import CommandMap
 from guet.commands.add import AddCommandFactory
 from guet.commands.get import GetCommandFactory
@@ -8,11 +8,14 @@ from guet.commands.init import InitCommandFactory
 from guet.commands.remove import RemoveCommandFactory
 from guet.commands.set import SetCommittersCommand
 from guet.commands.yeet import YeetCommandFactory
+from guet.commands.taiga import TaigaCommands
 from guet.committers import Committers2, CurrentCommitters
 from guet.files import FileSystem
 from guet.git import GitProxy
 from guet.util import add_command_help_if_invalid_command_given
+from guet.commands.gui import GuiCommandFactory
 from guet.util.errors import log_on_error
+
 
 
 @log_on_error
@@ -36,9 +39,14 @@ def main():
         file_system, committers, current_committers, git), 'Set committers for current repository')
     command_map.add_command('remove', RemoveCommandFactory(
         file_system, committers), 'Remove committer')
+    command_map.add_command('taiga', TaigaCommands(
+        file_system, committers, current_committers, git), 'Integrate taiga')
     command_map.add_command('yeet',
                             YeetCommandFactory(file_system, git),
                             'Remove guet configurations')
+    command_map.add_command('GUI', GuiCommandFactory(
+        file_system, committers, current_committers, git), 'Integrate GUI')
+
 
     command_map.set_default(UnknownCommandFactory(command_map))
 

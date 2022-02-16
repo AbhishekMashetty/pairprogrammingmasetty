@@ -26,6 +26,12 @@ class SetCommittersAction(Action):
                     if c.initials == arg:
                         found.append(c)
         #found = [c for c in self.committers.all() if c.initials in lowercase_args]
+        driver = found[0]
+        observers = found[1:]
+        observers.sort(key=lambda x: x.initials)
+        found = [driver]
+        for obs in observers:
+            found.append(obs)
         self.current_committers.set(found)
         printer = CommittersPrinter(initials_only=False)
         print('Committers set to:')

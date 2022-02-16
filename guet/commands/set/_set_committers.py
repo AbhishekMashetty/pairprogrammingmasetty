@@ -15,16 +15,17 @@ class SetCommittersAction(Action):
 
     def execute(self, args: List[str]):
         lowercase_args = [arg.lower() for arg in args]
-        initialsList = []
+        initialsList = {}
         for c in self.committers.all():
-            initialsList.append(c.initials)
+            initialsList[c.initials] = c
         found = []
-        allCommitters = self.committers.all()
+        #allCommitters = self.committers.all()
         for arg in lowercase_args:
             if arg in initialsList:
-                for c in allCommitters:
-                    if c.initials == arg:
-                        found.append(c)
+                found.append(initialsList[arg])        
+                #for c in allCommitters:
+                #    if c.initials == arg:
+                #        found.append(c)
         #found = [c for c in self.committers.all() if c.initials in lowercase_args]
         driver = found[0]
         observers = found[1:]

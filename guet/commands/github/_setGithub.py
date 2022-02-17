@@ -31,7 +31,6 @@ class SetGithub(Action):
             print("Invalid Command")
 
     def getdata(self):
-        print("Entered the getdata")
         resp = requests.get(SetGithub.query_url, headers=SetGithub.headers, params=SetGithub.params)
         output = resp.json()
         output_map = {}

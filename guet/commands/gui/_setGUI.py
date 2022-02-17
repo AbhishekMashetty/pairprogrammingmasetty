@@ -1,6 +1,11 @@
 from typing import List
 from tkinter import *
 from guet.steps.action import Action
+from guet.commands.init import InitCommandFactory
+from guet.git import GitProxy
+from guet.files import FileSystem
+from guet.commands import CommandMap
+from keyboard import press
 
 
 class SetGUI(Action):
@@ -11,7 +16,15 @@ class SetGUI(Action):
         #self.committers = committers
         #self.current_committers = current_committers
 
+    def guetInit():
+        command_map = CommandMap()
+        file_system = FileSystem()
+        command_map.add_command('gui', InitCommandFactory(
+        GitProxy(), file_system), 'Start guet tracking in the current repository')
+        press('enter')
+
     def execute(self, args: List[str]):
+        
         # lowercase_args = [arg.lower() for arg in args]
         # found = [c for c in self.committers.all() if c.initials in lowercase_args]
         # self.current_committers.set(found)
@@ -27,7 +40,7 @@ class SetGUI(Action):
 
 
         #Buttons
-        button1 = Button(root, text="Button 1")
+        button1 = Button(root, text="Initialize guet", command = SetGUI.guetInit)
         button1.grid(row=5, column=0)
 
         button2 = Button(root, text="Button 2")

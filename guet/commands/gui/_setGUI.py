@@ -6,6 +6,8 @@ from guet.git import GitProxy
 from guet.files import FileSystem
 from guet.commands import CommandMap
 from keyboard import press
+import os
+import appscript
 
 
 class SetGUI(Action):
@@ -17,11 +19,14 @@ class SetGUI(Action):
         #self.current_committers = current_committers
 
     def guetInit():
-        command_map = CommandMap()
-        file_system = FileSystem()
-        command_map.add_command('gui', InitCommandFactory(
-        GitProxy(), file_system), 'Start guet tracking in the current repository')
-        press('enter')
+        #command_map = CommandMap()
+        #file_system = FileSystem()
+
+        #os.system('open -a Terminal .')
+        appscript.app('Terminal').do_script('guet init')
+        #command_map.add_command('gui', InitCommandFactory(
+        #GitProxy(), file_system), 'Start guet tracking in the current repository')
+        #press('enter')
 
     def execute(self, args: List[str]):
         

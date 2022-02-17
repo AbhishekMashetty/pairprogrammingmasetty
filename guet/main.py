@@ -9,6 +9,7 @@ from guet.commands.remove import RemoveCommandFactory
 from guet.commands.set import SetCommittersCommand
 from guet.commands.yeet import YeetCommandFactory
 from guet.commands.taiga import TaigaCommands
+from guet.commands.session import SessionCommandFactory
 from guet.committers import Committers2, CurrentCommitters
 from guet.files import FileSystem
 from guet.git import GitProxy
@@ -41,6 +42,8 @@ def main():
         file_system, committers), 'Remove committer')
     command_map.add_command('taiga', TaigaCommands(
         file_system, committers, current_committers, git), 'Integrate taiga')
+    command_map.add_command('session', SessionCommandFactory(
+        file_system, committers, current_committers, git), 'Pair-Programming Session Tracker')    
     command_map.add_command('yeet',
                             YeetCommandFactory(file_system, git),
                             'Remove guet configurations')

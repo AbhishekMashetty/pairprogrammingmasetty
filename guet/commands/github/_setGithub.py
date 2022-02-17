@@ -18,8 +18,17 @@ class SetGithub(Action):
 
     def execute(self, args: List[str]):
         if args[0]=="issues":
-            print("Entered the execute")
+            token = input("Enter the token:")
+            owner = input("Enter the repo owner name:")
+            repo = input("Enter the repository name:")
+            query_url = f"https://api.github.com/repos/{owner}/{repo}/issues"
+            params = {
+            "state": "open",
+            }
+            headers = {'Authorization': f'token {token}'}
             print(self.getdata())
+        else:
+            print("Invalid Command")
 
     def getdata(self):
         print("Entered the getdata")

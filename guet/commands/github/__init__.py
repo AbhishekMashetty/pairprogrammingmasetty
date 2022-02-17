@@ -1,1 +1,1 @@
-from ._github import TaigaCommands
+from ._github import GithubCommands

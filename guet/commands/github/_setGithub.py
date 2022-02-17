@@ -17,7 +17,16 @@ class SetGithub(Action):
         super().__init__()
 
     def execute(self, args: List[str]):
-        resp = requests.get(SetGithub.query_url, headers=SetGithub.headers, params=SetGithub.params)
+        if args[0]=="issues":
+            self.getdata()
 
+    def getdata(self):
+        resp = requests.get(SetGithub.query_url, headers=SetGithub.headers, params=SetGithub.params)
+        output = resp.json()
+        output_map = {}
+        for i in output:
+            for key,val in i.items():
+                output_map[i["title"]] = i["body"]
+        return output_map
 
 

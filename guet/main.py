@@ -47,8 +47,8 @@ def main():
     command_map.add_command('yeet',
                             YeetCommandFactory(file_system, git),
                             'Remove guet configurations')
-    command_map.add_command('GUI', GuiCommandFactory(
-        file_system, committers, current_committers, git), 'Integrate GUI')
+    #command_map.add_command('GUI', GuiCommandFactory(
+    #    file_system, committers, current_committers, git), 'Integrate GUI')
 
 
     command_map.set_default(UnknownCommandFactory(command_map))

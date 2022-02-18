@@ -10,6 +10,7 @@ from guet.commands.set import SetCommittersCommand
 from guet.commands.yeet import YeetCommandFactory
 from guet.commands.taiga import TaigaCommands
 from guet.commands.session import SessionCommandFactory
+from guet.commands.github import GithubCommands
 from guet.committers import Committers2, CurrentCommitters
 from guet.files import FileSystem
 from guet.git import GitProxy
@@ -17,7 +18,7 @@ from guet.util import add_command_help_if_invalid_command_given
 from guet.commands.gui import GuiCommandFactory
 from guet.util.errors import log_on_error
 
-
+from guet.UI import GUI
 
 @log_on_error
 def main():
@@ -43,19 +44,26 @@ def main():
     command_map.add_command('taiga', TaigaCommands(
         file_system, committers, current_committers, git), 'Integrate taiga')
     command_map.add_command('session', SessionCommandFactory(
-        file_system, committers, current_committers, git), 'Pair-Programming Session Tracker')    
+        file_system, committers, current_committers, git), 'Pair-Programming Session Tracker')  
+    command_map.add_command('github', GithubCommands(
+        file_system, committers, current_committers, git), 'Get Issues from github')
     command_map.add_command('yeet',
                             YeetCommandFactory(file_system, git),
                             'Remove guet configurations')
-    command_map.add_command('GUI', GuiCommandFactory(
-        file_system, committers, current_committers, git), 'Integrate GUI')
+    #command_map.add_command('GUI', GuiCommandFactory(
+    #    file_system, committers, current_committers, git), 'Integrate GUI')
 
 
     command_map.set_default(UnknownCommandFactory(command_map))
 
     args = add_command_help_if_invalid_command_given(sys.argv[1:])
 
-    command = command_map.get_command(args[0]).build()
-    command.play(args[1:])
+    if args[0]=='gui':
+        print('UI opens here')
+        interface = GUI(command_map)
+        interface.execute()
+    else:
+        command = command_map.get_command(args[0]).build()
+        command.play(args[1:])
 
-    file_system.save_all()
+        file_system.save_all()

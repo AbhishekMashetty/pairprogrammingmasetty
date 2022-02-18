@@ -15,7 +15,7 @@ from guet.git import GitProxy
 from guet.util import add_command_help_if_invalid_command_given
 from guet.commands.gui import GuiCommandFactory
 from guet.util.errors import log_on_error
-from guet.UI import SetGUI
+from guet.gui import SetGUI
 
 
 @log_on_error

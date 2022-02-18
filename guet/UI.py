@@ -21,11 +21,11 @@ class GUI():
 
 
         #Buttons
+
         button1 = Button(root, text="Init", command=self.guetGUI)
         button1.grid(row=5, column=0)
 
         button2 = Button(root, text="Yeet", command=self.guetYeet)
-        button2.grid(row=6, column=0)
 
         button3 = Button(root, text="Button 3")
         button3.grid(row=7, column=0)
@@ -46,9 +46,11 @@ class GUI():
     def guetYeet(self):
         command = self.commandMap.get_command('yeet').build()
         command.play([])
+
         self.fileSystem.save_all()
     
     def guetGUI(self):
         command = self.commandMap.get_command('init').build()
         command.play([])
+
         self.fileSystem.save_all()

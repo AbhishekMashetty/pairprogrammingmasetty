@@ -26,6 +26,7 @@ class GUI():
         button1.grid(row=5, column=0)
 
         button2 = Button(root, text="Yeet", command=self.guetYeet)
+        button2.grid(row=6, column=0)
 
         button3 = Button(root, text="Button 3")
         button3.grid(row=7, column=0)

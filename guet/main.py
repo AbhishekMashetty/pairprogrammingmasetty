@@ -17,7 +17,7 @@ from guet.util import add_command_help_if_invalid_command_given
 from guet.commands.gui import GuiCommandFactory
 from guet.util.errors import log_on_error
 
-
+from guet.UI import GUI
 
 @log_on_error
 def main():
@@ -55,7 +55,12 @@ def main():
 
     args = add_command_help_if_invalid_command_given(sys.argv[1:])
 
-    command = command_map.get_command(args[0]).build()
-    command.play(args[1:])
+    if args[0]=='gui':
+        print('UI opens here')
+        interface = GUI(command_map)
+        interface.execute()
+    else:
+        command = command_map.get_command(args[0]).build()
+        command.play(args[1:])
 
-    file_system.save_all()
+        file_system.save_all()

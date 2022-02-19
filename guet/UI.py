@@ -1,22 +1,16 @@
-from typing import List
 from tkinter import *
-from guet.steps.action import Action
+from guet.commands import CommandMap
+from guet.files import FileSystem
 
 
-class SetGUI(Action):
 
-    def __init__(self):
-        super().__init__()
-        self.authToken = ''
-        #self.committers = committers
-        #self.current_committers = current_committers
+class GUI():
 
-    def execute(self, args: List[str]):
-        # lowercase_args = [arg.lower() for arg in args]
-        # found = [c for c in self.committers.all() if c.initials in lowercase_args]
-        # self.current_committers.set(found)
-        # printer = CommittersPrinter(initials_only=False)
+    def __init__(self, cMap: CommandMap):
+        self.commandMap = cMap
+        self.fileSystem = FileSystem()
 
+    def execute(self):
         root = Tk()
         #Heading text
         myLabel = Label(root, text="Welcome to guet")
@@ -27,10 +21,11 @@ class SetGUI(Action):
 
 
         #Buttons
-        button1 = Button(root, text="Button 1")
+
+        button1 = Button(root, text="Init", command=self.guetGUI)
         button1.grid(row=5, column=0)
 
-        button2 = Button(root, text="Button 2")
+        button2 = Button(root, text="Yeet", command=self.guetYeet)
         button2.grid(row=6, column=0)
 
         button3 = Button(root, text="Button 3")
@@ -46,4 +41,17 @@ class SetGUI(Action):
         button6.grid(row=10, column=0)
 
         #Main loop
-        root.mainloop() 
+        root.mainloop()
+
+    
+    def guetYeet(self):
+        command = self.commandMap.get_command('yeet').build()
+        command.play([])
+
+        self.fileSystem.save_all()
+    
+    def guetGUI(self):
+        command = self.commandMap.get_command('init').build()
+        command.play([])
+
+        self.fileSystem.save_all()

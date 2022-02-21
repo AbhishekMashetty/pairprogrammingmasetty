@@ -12,6 +12,7 @@ class GUI():
 
     def execute(self):
         root = Tk()
+        root.geometry('2000x2000')
         #Heading text
         myLabel = Label(root, text="Welcome to guet")
         label2 = Label(root, text="Do pair programming with ease")

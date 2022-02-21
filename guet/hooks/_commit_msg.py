@@ -14,7 +14,7 @@ class CommitMsg(Action):
 
     def execute(self, _):
         new_lines = append_committers(self.current_committers.get(), self.git.commit_msg)
-        self.git.commit_msg = new_lines
+        self.git.commit_msg = new_lines 
 
     def _co_autor_lines(self, committers: List[Committer]) -> List[str]:
         return [f'Co-authored-by: {committer.name} <{committer.email}>' for committer in committers]

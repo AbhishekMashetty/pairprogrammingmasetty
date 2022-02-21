@@ -33,14 +33,13 @@ class SessionTrackerAction(Action):
             path = Path(join(CONFIGURATION_DIRECTORY, constants.SESSION_TRACKER))
             project_path = project_root()
             timeStamp = datetime.now().strftime("%d-%m-%y-%H:%M:%S")
-            sessionDetails = timeStamp + "," + f'{project_path}\n'
+            sessionDetails = "\n" + timeStamp + "," + f'{project_path}'
             sessionExist = False
-            print(project_path)
             if path.is_file():
                 with open(path) as sessionFile:
                     sessionRecords = sessionFile.readlines()
                 for session in sessionRecords:
-                    if project_path == session.split(',')[-1]:
+                    if str(project_path) == session.split(',')[-1]:
                         sessionExist = True
                         print("Session Already Exist")
             if not sessionExist:    

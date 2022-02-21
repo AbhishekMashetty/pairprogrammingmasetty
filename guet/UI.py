@@ -3,8 +3,10 @@ from tkinter import *
 from guet.commands import CommandMap
 from guet.files import FileSystem
 import os
-
-
+from guet.commands.add import AddCommandFactory
+from guet.commands import CommandMap
+from guet.git import GitProxy
+from guet.committers import Committers2, CurrentCommitters
 
 class GUI():
 
@@ -29,7 +31,6 @@ class GUI():
         self.view = Frame(self.root, bg='blue')
         self.view.pack(side=RIGHT)
 
-
         #Nav Buttons
         button1 = Button(self.root, text="Init", command=self.guetInit, height=2, width=10)
         #button1.grid(row=5, column=0)
@@ -37,7 +38,7 @@ class GUI():
         button2 = Button(self.root, text="Yeet", command=self.guetYeet, height=2, width=10)
         #button2.grid(row=10, column=0)
 
-        button3 = Button(self.root, text="Add", height=2, width=10, command=self.showAdd)
+        button3 = Button(self.root, text="Add", height=2, width=10, command=self.buttonAdd)
         #button3.grid(row=6, column=0)
 
         button4 = Button(self.root, text="Get", height=2, width=10)
@@ -76,9 +77,20 @@ class GUI():
 
         self.fileSystem.save_all()
 
+    def guetAdd(self):
+        command = self.commandMap.get_command('add').build()
+        command.play([])
+        self.fileSystem.save_all()
 
-    def showAdd(self):
+    def buttonAdd(self):
+    
         for widget in self.view.winfo_children():
             widget.destroy()
-        newLabel= Label(self.view, text='Add frame')
+
+        newLabel= Label(self.view, text = "Enter Name and email address of the new commiter")
+        newLabel.grid(row=1, column=5)
+        pName = Entry()
+        pEmail = Entry()
+        pName.pack()
+        pEmail.pack()
         newLabel.pack()

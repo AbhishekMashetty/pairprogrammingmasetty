@@ -59,10 +59,17 @@ class SetTaiga(Action):
             return data
 
     def getMembers(self, projectSlug):
+        memberData=[]
         projectData = self.get(self.getProjectURL + projectSlug)
         print('This project has ' + str(len(projectData['members'])) +' members. They are:')
         for person in projectData['members']:
             print(person['full_name'] + ' : ' + person['role_name'])
+        flag = input("Do you want to save the team members? (Y/N): ")
+        if flag == 'Y':
+            for person in projectData['members']:
+                memberData.append(person['full_name'])
+            print(memberData)
+        return memberData
 
 
     def login(self, username, password):

@@ -64,7 +64,6 @@ class GUI():
 
         #Main loop
         self.root.mainloop()
-
     
     def guetYeet(self):
         command = self.commandMap.get_command('yeet').build()
@@ -74,7 +73,7 @@ class GUI():
     
     def guetInit(self):
         command = self.commandMap.get_command('init').build()
-        command.play([]])
+        command.play([])
         self.fileSystem.save_all()
 
     def guetAdd(self):

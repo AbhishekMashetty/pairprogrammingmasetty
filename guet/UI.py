@@ -9,8 +9,6 @@ from guet.commands import CommandMap
 from guet.git import GitProxy
 from guet.committers import Committers2, CurrentCommitters
 
-add = []
-
 class GUI():
 
     def __init__(self, cMap: CommandMap):
@@ -28,10 +26,10 @@ class GUI():
         #myLabel.grid(row=0, column=0)
         #label2.grid(row=2, column=0)
 
-        self.nav = Frame(self.root, bg='red')
+        self.nav = Frame(self.root)
         self.nav.pack(side=LEFT)
 
-        self.view = Frame(self.root, bg='blue')
+        self.view = Frame(self.root)
         self.view.pack(side=RIGHT)
 
         #Nav Buttons
@@ -50,7 +48,7 @@ class GUI():
         button5 = Button(self.root, text="Set", height=2, width=10, command = self.showSet)
         #button5.grid(row=8, column=0)
 
-        button6 = Button(self.root, text="Remove", height=2, width=10)
+        button6 = Button(self.root, text="Remove", height=2, width=10, command = self.showRemove)
         #button6.grid(row=9, column=0)
 
         label1 = Label(self.view, text='Repository: ' + os.getcwd(), anchor='w')
@@ -76,8 +74,7 @@ class GUI():
     
     def guetInit(self):
         command = self.commandMap.get_command('init').build()
-        command.play(add)
-
+        command.play([]])
         self.fileSystem.save_all()
 
     def guetAdd(self):
@@ -120,10 +117,6 @@ class GUI():
         button = Button(self.view, text = "Add commiter", height=2, width=10, command = self.guetAdd)
         button.grid(row=7, column=1)
 
-        add.append(pInitial.get())
-        add.append(pName.get())
-        add.append(pEmail.get())
-
     def showSet(self):
 
         for widget in self.view.winfo_children():
@@ -131,3 +124,25 @@ class GUI():
 
         newLabel = Label(self.view, text = "Set Frame")
         newLabel.grid(row=1, column=1)
+
+    def guetRemove(self):
+
+        remove_initial = self.inp[0].get()
+        command = self.commandMap.get_command('remove').build()
+        command.play([remove_initial])
+        self.fileSystem.save_all()
+
+    def showRemove(self):
+
+        for widget in self.view.winfo_children():
+            widget.destroy()
+
+        addLabel = Label(self.view, text = "Enter the initials of the programmer you want to remove")
+        addLabel.grid(row=1, column=0)
+
+        Initial = Entry(self.view, borderwidth = 3)
+        Initial.grid(row=4, column=0)
+
+        button = Button(self.view, text = "Remove", height=2, width=10, command = self.guetRemove)
+        button.grid(row=5, column=0)
+        self.inp = [Initial]

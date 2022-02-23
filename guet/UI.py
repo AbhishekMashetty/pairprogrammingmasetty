@@ -1,4 +1,5 @@
 from ctypes import alignment
+from dataclasses import field
 from tkinter import *
 from guet.commands import CommandMap
 from guet.files import FileSystem
@@ -7,6 +8,8 @@ from guet.commands.add import AddCommandFactory
 from guet.commands import CommandMap
 from guet.git import GitProxy
 from guet.committers import Committers2, CurrentCommitters
+
+add = []
 
 class GUI():
 
@@ -17,7 +20,7 @@ class GUI():
     def execute(self):
         self.root = Tk()
         self.root.title('GUET')
-        self.root.geometry('500x400')
+        self.root.geometry('600x400')
         #Heading text
         #myLabel = Label(self.root, text="Welcome to guet")
         #label2 = Label(self.root, text="Do pair programming with ease")
@@ -38,13 +41,13 @@ class GUI():
         button2 = Button(self.root, text="Yeet", command=self.guetYeet, height=2, width=10)
         #button2.grid(row=10, column=0)
 
-        button3 = Button(self.root, text="Add", height=2, width=10, command=self.buttonAdd)
+        button3 = Button(self.root, text="Add", height=2, width=10, command = self.showAdd)
         #button3.grid(row=6, column=0)
 
         button4 = Button(self.root, text="Get", height=2, width=10)
         #button4.grid(row=7, column=0)
 
-        button5 = Button(self.root, text="Set", height=2, width=10)
+        button5 = Button(self.root, text="Set", height=2, width=10, command = self.showSet)
         #button5.grid(row=8, column=0)
 
         button6 = Button(self.root, text="Remove", height=2, width=10)
@@ -73,24 +76,58 @@ class GUI():
     
     def guetInit(self):
         command = self.commandMap.get_command('init').build()
-        command.play([])
+        command.play(add)
 
         self.fileSystem.save_all()
 
     def guetAdd(self):
-        command = self.commandMap.get_command('add').build()
-        command.play([])
-        self.fileSystem.save_all()
 
-    def buttonAdd(self):
-    
+        initial = self.inputs[0].get()
+        name = self.inputs[1].get()
+        email = self.inputs[2].get()
+        command = self.commandMap.get_command('add').build()
+        command.play([initial, name, email])
+        self.fileSystem.save_all()
+        
+
+    def showAdd(self):
+
         for widget in self.view.winfo_children():
             widget.destroy()
 
-        newLabel= Label(self.view, text = "Enter Name and email address of the new commiter")
-        newLabel.grid(row=1, column=5)
-        pName = Entry()
-        pEmail = Entry()
-        pName.pack()
-        pEmail.pack()
-        newLabel.pack()
+        newLabel = Label(self.view, text = "Enter Initials, Name and email address of the new commiter")
+        newLabel.grid(row=1, column=1)
+
+        pInitial = Entry(self.view, borderwidth = 3)
+        pName = Entry(self.view, borderwidth = 3)
+        pEmail = Entry(self.view, borderwidth = 3)
+
+        self.inputs = [pInitial,pName,pEmail]
+        
+        initialLabel = Label(self.view, text = "Initial")
+        initialLabel.grid(row=3, column=0)
+
+        nameLabel = Label(self.view, text = "Name")
+        nameLabel.grid(row=4, column=0)
+
+        emailLabel = Label(self.view, text = "Email")
+        emailLabel.grid(row=5, column=0)
+
+        pInitial.grid(row=3, column=1)
+        pName.grid(row=4, column=1 )
+        pEmail.grid(row=5, column=1)
+
+        button = Button(self.view, text = "Add commiter", height=2, width=10, command = self.guetAdd)
+        button.grid(row=7, column=1)
+
+        add.append(pInitial.get())
+        add.append(pName.get())
+        add.append(pEmail.get())
+
+    def showSet(self):
+
+        for widget in self.view.winfo_children():
+            widget.destroy()
+
+        newLabel = Label(self.view, text = "Set Frame")
+        newLabel.grid(row=1, column=1)

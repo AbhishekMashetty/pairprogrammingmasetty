@@ -9,7 +9,6 @@ from guet.commands import CommandMap
 from guet.git import GitProxy
 from guet.committers import Committers2, CurrentCommitters
 
-add = []
 
 class GUI():
 
@@ -76,7 +75,7 @@ class GUI():
     
     def guetInit(self):
         command = self.commandMap.get_command('init').build()
-        command.play(add)
+        command.play([])
 
         self.fileSystem.save_all()
 
@@ -120,9 +119,6 @@ class GUI():
         button = Button(self.view, text = "Add commiter", height=2, width=10, command = self.guetAdd)
         button.grid(row=7, column=1)
 
-        add.append(pInitial.get())
-        add.append(pName.get())
-        add.append(pEmail.get())
 
     def showSet(self):
 

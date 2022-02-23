@@ -61,6 +61,7 @@ class SetTaiga(Action):
     def getMembers(self, projectSlug):
         memberData=[]
         projectData = self.get(self.getProjectURL + projectSlug)
+        print(projectData)
         print('This project has ' + str(len(projectData['members'])) +' members. They are:')
         for person in projectData['members']:
             print(person['full_name'] + ' : ' + person['role_name'])
@@ -70,6 +71,10 @@ class SetTaiga(Action):
                 memberData.append(person['full_name'])
             print(memberData)
         return memberData
+    # def listMembers(self):
+    #     url = "http://localhost:8000/api/v1/users"
+
+
 
 
     def login(self, username, password):

@@ -15,6 +15,10 @@ class GUI():
     def __init__(self, cMap: CommandMap):
         self.commandMap = cMap
         self.fileSystem = FileSystem()
+        self.committers = Committers2(self.fileSystem)
+        self.git = GitProxy()
+        self.currentCommitters = CurrentCommitters(self.fileSystem, self.committers)
+        self.currentCommitters.register_observer(self.git)
 
     def execute(self):
         self.root = Tk()
@@ -27,10 +31,10 @@ class GUI():
         #myLabel.grid(row=0, column=0)
         #label2.grid(row=2, column=0)
 
-        self.nav = Frame(self.root, bg='red')
+        self.nav = Frame(self.root)
         self.nav.pack(side=LEFT)
 
-        self.view = Frame(self.root, bg='blue')
+        self.view = Frame(self.root)
         self.view.pack(side=RIGHT)
 
         #Nav Buttons
@@ -43,7 +47,7 @@ class GUI():
         button3 = Button(self.root, text="Add", height=2, width=10, command = self.showAdd)
         #button3.grid(row=6, column=0)
 
-        button4 = Button(self.root, text="Get", height=2, width=10)
+        button4 = Button(self.root, text="Get", height=2, width=10, command=self.showGet)
         #button4.grid(row=7, column=0)
 
         button5 = Button(self.root, text="Set", height=2, width=10, command = self.showSet)
@@ -119,6 +123,51 @@ class GUI():
         button = Button(self.view, text = "Add commiter", height=2, width=10, command = self.guetAdd)
         button.grid(row=7, column=1)
 
+
+    def showGet(self):
+
+        for widget in self.view.winfo_children():
+            widget.destroy()
+
+        newLabel = Label(self.view, text = "\t\t\t\t\t\t\t\t")
+        newLabel.pack()
+        buttonCurrent = Button(self.view, text="get current", height=2, width=10, command=self.guetGetCurrent)
+        buttonAll = Button(self.view, text="get all", height=2, width=10, command=self.guetGetAll)
+        buttonCurrent.pack(side=TOP, anchor='n')
+        buttonAll.pack(side=TOP, anchor='n')
+        text = Text(self.view, state='disabled', height=10, width=40) #, 
+        text.pack()
+        self.inputs = [text]
+        
+
+
+    def guetGetAll(self):
+        #print(self.inputs)
+        text=''
+        for c in self.committers.all():
+            text+=str(c)
+            text+='\n'
+            #print(text)
+        textBox = self.inputs[0]
+        textBox.config(state=NORMAL)
+        textBox.delete(1.0,"end")
+        textBox.insert(1.0, text)
+        textBox.config(state=DISABLED)
+        self.fileSystem.save_all()
+
+    def guetGetCurrent(self):
+        #print(self.inputs)
+        text=''
+        for c in self.currentCommitters.get():
+            text+=str(c)
+            text+='\n'
+            #print(text)
+        textBox = self.inputs[0]
+        textBox.config(state=NORMAL)
+        textBox.delete(1.0,"end")
+        textBox.insert(1.0, text)
+        textBox.config(state=DISABLED)
+        self.fileSystem.save_all()
 
     def showSet(self):
 

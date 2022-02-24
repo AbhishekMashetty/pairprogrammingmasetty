@@ -5,6 +5,7 @@ import json
 #from guet.committers import Committers2 as Committers
 #from guet.committers import CommittersPrinter, CurrentCommitters
 from guet.steps.action import Action
+from guet.commands.add import _add_committer
 
 
 class SetTaiga(Action):
@@ -34,9 +35,7 @@ class SetTaiga(Action):
             self.login(user, pwd)
             slug = input('Project slug:')
             self.getMembers(slug)
-
-
-    
+ 
 
     def get(self, url):
         req = http.Request(url = url)
@@ -58,23 +57,51 @@ class SetTaiga(Action):
             #print(data)
             return data
 
+    # def getMembers(self, projectSlug):
+    #     memberData=[]
+    #     projectData = self.get(self.getProjectURL + projectSlug)
+    #     print(projectData)
+    #     print('This project has ' + str(len(projectData['members'])) +' members. They are:')
+    #     for person in projectData['members']:
+    #         print(person['full_name'] + ' : ' + person['role_name'])
+    #     flag = input("Do you want to save the team members? (Y/N): ")
+    #     if flag == 'Y':
+    #         for person in projectData['members']:
+    #             memberData.append(person['full_name'])
+    #         print(memberData)
+    #     return memberData
+    
     def getMembers(self, projectSlug):
         memberData=[]
         projectData = self.get(self.getProjectURL + projectSlug)
-        print(projectData)
         print('This project has ' + str(len(projectData['members'])) +' members. They are:')
         for person in projectData['members']:
             print(person['full_name'] + ' : ' + person['role_name'])
         flag = input("Do you want to save the team members? (Y/N): ")
         if flag == 'Y':
+            email=[]
             for person in projectData['members']:
                 memberData.append(person['full_name'])
-            print(memberData)
+            firstNames = map((lambda x: x.split()[0]), memberData)
+            for i in firstNames:
+                email.append(i+"@asu.edu")
+            print(email)
+            self.saveCommitters(firstNames, email)
         return memberData
+    
     # def listMembers(self):
     #     url = "http://localhost:8000/api/v1/users"
 
 
+
+    # def saveCommitters(self, firstNames, emails):
+        # guet add p1 "Person 1" person@example.com
+        
+
+
+
+
+        
 
 
     def login(self, username, password):

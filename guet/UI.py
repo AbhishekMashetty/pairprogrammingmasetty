@@ -130,7 +130,7 @@ class GUI():
         command = self.commandMap.get_command('remove').build()
         command.play([remove_initial])
         self.fileSystem.save_all()
-
+                       
     def showRemove(self):
 
         for widget in self.view.winfo_children():

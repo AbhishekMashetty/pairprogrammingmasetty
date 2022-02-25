@@ -6,6 +6,9 @@ import json
 #from guet.committers import CommittersPrinter, CurrentCommitters
 from guet.steps.action import Action
 from guet.commands.add import _add_committer
+from guet.files import FileSystem
+from guet.commands import CommandMap
+from guet.committers import Committers2, CurrentCommitters
 
 
 class SetTaiga(Action):
@@ -18,6 +21,8 @@ class SetTaiga(Action):
     def __init__(self):
         super().__init__()
         self.authToken = ''
+        file_system = FileSystem()
+        committers = Committers2(file_system)
         #self.committers = committers
         #self.current_committers = current_committers
 
@@ -73,8 +78,12 @@ class SetTaiga(Action):
     
     def getMembers(self, projectSlug):
         memberData=[]
+        userNames = []
         projectData = self.get(self.getProjectURL + projectSlug)
+        print(projectData)
         print('This project has ' + str(len(projectData['members'])) +' members. They are:')
+        for person in projectData['members']:
+            userNames.append(person["username"])
         for person in projectData['members']:
             print(person['full_name'] + ' : ' + person['role_name'])
         flag = input("Do you want to save the team members? (Y/N): ")
@@ -82,28 +91,17 @@ class SetTaiga(Action):
             email=[]
             for person in projectData['members']:
                 memberData.append(person['full_name'])
-            firstNames = map((lambda x: x.split()[0]), memberData)
-            for i in firstNames:
+            for i in userNames:
                 email.append(i+"@asu.edu")
             print(email)
-            self.saveCommitters(firstNames, email)
+        self.saveCommitters(userNames, email)
         return memberData
     
-    # def listMembers(self):
-    #     url = "http://localhost:8000/api/v1/users"
-
-
-
-    # def saveCommitters(self, firstNames, emails):
-        # guet add p1 "Person 1" person@example.com
+    
         
 
 
-
-
-        
-
-
+       
     def login(self, username, password):
         #f = open('config.json')
 

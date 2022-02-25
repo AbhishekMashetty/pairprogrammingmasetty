@@ -22,81 +22,44 @@ class SessionTrackerAction(Action):
         self.committers = committers
         self.current_committers = current_committers
 
-    # def new_timestamp():
-    #     # Creates a new timestamp with a specific format.
-    #     return datetime.now().strftime("%d/%m/%y - %H:%M:%S")
-
     def execute(self, args: List[str]):
-
+        path = Path(join(CONFIGURATION_DIRECTORY, constants.SESSION_TRACKER))
+        project_path = project_root()
+        sessionExist = False
         if args[0] == 'start':
-            print(":::Pair-Programming Session Starts:::")
-            path = Path(join(CONFIGURATION_DIRECTORY, constants.SESSION_TRACKER))
-            project_path = project_root()
+            print(":::Pair-Programming Session:::")
             timeStamp = datetime.now().strftime("%d-%m-%y-%H:%M:%S")
-            sessionDetails = "\n" + timeStamp + "," + f'{project_path}'
-            sessionExist = False
+            sessionDetails = timeStamp + "," + f'{str(project_path)}' + "\n" 
             if path.is_file():
                 with open(path) as sessionFile:
                     sessionRecords = sessionFile.readlines()
+                    i=0
                 for session in sessionRecords:
-                    if str(project_path) == session.split(',')[-1]:
+                    if str(project_path) == session.split(',')[-1].strip("\n\\"):
                         sessionExist = True
                         print("Session Already Exist")
-            if not sessionExist:    
+                        break
+            if not sessionExist:
+                print("New Session started")    
                 with path.open('a') as fp:
                     sessionExist = True
                     fp.write(sessionDetails)
-            #path.write_text(sessionDetails)
-            #write_lines(path, timeStamp + "," + f'{project_path}')
-            # committers = self.committers.all()
-            # pre_print = 'All committers'
         elif args[0] == 'end':
-            print(":::Pair-Programming Session Ends:::")
-            # committers = self.current.get()
-            # pre_print = 'Current committers'
+            print(":::Pair-Programming Session:::")
+            if path.is_file():
+                with open(path,"r") as sessionFile:
+                    sessionRecords = sessionFile.readlines()
+                with open(path,"w") as sessionFile:
+                    for session in sessionRecords:
+                        if str(project_path) == session.split(',')[-1].strip("\n\\"):
+                            sessionExist = True
+                            print("Session Already Exist")
+                            print("Session Ended Successfully")
+                        else:
+                            sessionFile.write(session)
+                    if not sessionExist:
+                        print("::No seesion found::Cannot End Session::")
         else:
             print("Please pass a valid <identifier>")
             print("For details & help:")
             print("Use: guet session --help")
-
-    
-        
-
-
-# class GetCommittersAction(Action):
-
-#     def execute(self, args: List[str]):
-#         printer = CommittersPrinter(initials_only=False)
-#         if args[0] == 'all':
-#             committers = self.committers.all()
-#             pre_print = 'All committers'
-#         else:
-#             committers = self.current.get()
-#             pre_print = 'Current committers'
-
-#         print(pre_print)
-#         printer.print(committers)
-
-#         lowercase_args = [arg.lower() for arg in args]
-#         initialsList = {}
-#         for c in self.committers.all():
-#             initialsList[c.initials] = c
-#         found = []
-#         #allCommitters = self.committers.all()
-#         for arg in lowercase_args:
-#             if arg in initialsList:
-#                 found.append(initialsList[arg])        
-#                 #for c in allCommitters:
-#                 #    if c.initials == arg:
-#                 #        found.append(c)
-#         #found = [c for c in self.committers.all() if c.initials in lowercase_args]
-#         driver = found[0]
-#         observers = found[1:]
-#         observers.sort(key=lambda x: x.initials)
-#         found = [driver]
-#         for obs in observers:
-#             found.append(obs)
-#         self.current_committers.set(found)
-#         printer = CommittersPrinter(initials_only=False)
-#         print('Committers set to:')
-#         printer.print(found)

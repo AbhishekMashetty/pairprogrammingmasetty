@@ -36,7 +36,6 @@ class SetTaiga(Action):
             req.add_header("Authorization", "Bearer " + self.authToken)
         with http.urlopen(req) as res:
             data = json.loads(res.read().decode('utf-8'))
-            #print(data)
             return data
 
     def post(self, url, body):
@@ -47,14 +46,12 @@ class SetTaiga(Action):
         if len(self.authToken): req.add_header("Authorization", "Bearer " + self.authToken)
         with http.urlopen(req) as res:
             data = json.loads(res.read().decode("utf-8"))
-            #print(data)
             return data
 
     def getMembers(self, projectSlug):
         memberData=[]
         userNames = []
         projectData = self.get(self.getProjectURL + projectSlug)
-        print(projectData)
         print('This project has ' + str(len(projectData['members'])) +' members. They are:')
         for person in projectData['members']:
             userNames.append(person["username"])
@@ -67,7 +64,6 @@ class SetTaiga(Action):
                 memberData.append(person['full_name'])
             for i in userNames:
                 email.append(i+"@asu.edu")
-            print(email)
         self.saveCommitters(userNames, email)
         return memberData
     
@@ -78,11 +74,11 @@ class SetTaiga(Action):
         emails=emails
         initials = []
         for i in firstNames:
-            initials.append(i[:3]+"1")
+            initials.append(i[0:2]+"1")
         for i in range(len(firstNames)):
-            print("Entered into actual ")
             committer = Committer(firstNames[i], emails[i], initials[i])
             committer = committers.add(committer)
+        print("All the taiga members are set as committers. Check using guet get all command")
         
     def login(self, username, password):
         data = {

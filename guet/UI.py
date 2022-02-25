@@ -53,7 +53,7 @@ class GUI():
         button5 = Button(self.root, text="Set", height=2, width=10, command = self.showSet)
         #button5.grid(row=8, column=0)
 
-        button6 = Button(self.root, text="Remove", height=2, width=10)
+        button6 = Button(self.root, text="Remove", height=2, width=10, command = self.showRemove)
         #button6.grid(row=9, column=0)
 
         label1 = Label(self.view, text='Repository: ' + os.getcwd(), anchor='w')
@@ -69,7 +69,6 @@ class GUI():
 
         #Main loop
         self.root.mainloop()
-
     
     def guetYeet(self):
         command = self.commandMap.get_command('yeet').build()
@@ -123,6 +122,35 @@ class GUI():
         button = Button(self.view, text = "Add commiter", height=2, width=10, command = self.guetAdd)
         button.grid(row=7, column=1)
 
+    def guetRemove(self):
+
+        remove_initial = self.inp[0].get()
+        command = self.commandMap.get_command('remove').build()
+        command.play([remove_initial])
+        self.fileSystem.save_all()
+                       
+    def showRemove(self):
+
+        for widget in self.view.winfo_children():
+            widget.destroy()
+
+        addLabel = Label(self.view, text = "Enter the initials of the programmer you want to remove")
+        addLabel.grid(row=1, column=0)
+
+        Initial = Entry(self.view, borderwidth = 3)
+        Initial.grid(row=4, column=0)
+
+        button = Button(self.view, text = "Remove", height=2, width=10, command = self.guetRemove)
+        button.grid(row=5, column=0)
+        self.inp = [Initial]
+        newLabel = Label(self.view, text = "\t\t\t\t\t\t\t\t")
+        newLabel.pack()
+        textBox = Text(self.view, state='disabled', height=10, width=40) #, 
+        buttonCurrent = Button(self.view, text="get current", height=2, width=10, command=lambda: self.guetGet('current', textBox)) 
+        buttonAll = Button(self.view, text="get all", height=2, width=10, command=lambda: self.guetGet('all', textBox))
+        buttonCurrent.pack(side=TOP, anchor='n')
+        buttonAll.pack(side=TOP, anchor='n')
+        textBox.pack()
 
     def showGet(self):
 

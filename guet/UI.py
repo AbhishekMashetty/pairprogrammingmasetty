@@ -131,43 +131,29 @@ class GUI():
 
         newLabel = Label(self.view, text = "\t\t\t\t\t\t\t\t")
         newLabel.pack()
-        buttonCurrent = Button(self.view, text="get current", height=2, width=10, command=self.guetGetCurrent)
-        buttonAll = Button(self.view, text="get all", height=2, width=10, command=self.guetGetAll)
+        textBox = Text(self.view, state='disabled', height=10, width=40) #, 
+        buttonCurrent = Button(self.view, text="get current", height=2, width=10, command=lambda: self.guetGet('current', textBox)) 
+        buttonAll = Button(self.view, text="get all", height=2, width=10, command=lambda: self.guetGet('all', textBox))
         buttonCurrent.pack(side=TOP, anchor='n')
         buttonAll.pack(side=TOP, anchor='n')
-        text = Text(self.view, state='disabled', height=10, width=40) #, 
-        text.pack()
-        self.inputs = [text]
+        textBox.pack()
         
 
-
-    def guetGetAll(self):
-        #print(self.inputs)
+    def guetGet(self, option, textBox):
         text=''
-        for c in self.committers.all():
+        if option == 'all':
+            cList = self.committers.all()
+        elif option == 'current':
+            cList = self.currentCommitters.get()
+        for c in cList:
             text+=str(c)
             text+='\n'
-            #print(text)
-        textBox = self.inputs[0]
         textBox.config(state=NORMAL)
         textBox.delete(1.0,"end")
         textBox.insert(1.0, text)
         textBox.config(state=DISABLED)
         self.fileSystem.save_all()
 
-    def guetGetCurrent(self):
-        #print(self.inputs)
-        text=''
-        for c in self.currentCommitters.get():
-            text+=str(c)
-            text+='\n'
-            #print(text)
-        textBox = self.inputs[0]
-        textBox.config(state=NORMAL)
-        textBox.delete(1.0,"end")
-        textBox.insert(1.0, text)
-        textBox.config(state=DISABLED)
-        self.fileSystem.save_all()
 
     def showSet(self):
 

@@ -4,10 +4,10 @@ from tkinter import *
 from guet.commands import CommandMap
 from guet.files import FileSystem
 import os
-from guet.commands.add import AddCommandFactory
 from guet.commands import CommandMap
 from guet.git import GitProxy
 from guet.committers import Committers2, CurrentCommitters
+from guet.commands.set._set_committers import SetCommittersAction
 
 
 class GUI():
@@ -137,7 +137,6 @@ class GUI():
         buttonCurrent.pack(side=TOP, anchor='n')
         buttonAll.pack(side=TOP, anchor='n')
         textBox.pack()
-        
 
     def guetGet(self, option, textBox):
         text=''
@@ -154,11 +153,24 @@ class GUI():
         textBox.config(state=DISABLED)
         self.fileSystem.save_all()
 
-
     def showSet(self):
-
         for widget in self.view.winfo_children():
             widget.destroy()
+        
+        newLabel = Label(self.view, text = "\t\t\t\t\t\t\t\t")
+        newLabel.pack()
+        textEntry = Entry(self.view, width=40) #, 
+        textEntry.pack()
+        buttonCurrent = Button(self.view, text="Set", height=2, width=10, command=lambda: self.guetSet(textEntry)) 
+        buttonCurrent.pack(side=TOP, anchor='n')
 
-        newLabel = Label(self.view, text = "Set Frame")
-        newLabel.grid(row=1, column=1)
+
+    def guetSet(self, textEntry):
+        input = textEntry.get()
+        initials = input.split(' ')
+        cList=[]
+        for c in initials:
+            if len(c):
+                cList.append(c.lower())
+        setAction = SetCommittersAction(self.committers, self.currentCommitters)
+        setAction.execute(cList)

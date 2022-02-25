@@ -69,6 +69,7 @@ class GUI():
 
         #Main loop
         self.root.mainloop()
+
     
     def guetYeet(self):
         command = self.commandMap.get_command('yeet').build()
@@ -79,7 +80,6 @@ class GUI():
     def guetInit(self):
         command = self.commandMap.get_command('init').build()
         command.play([])
-
         self.fileSystem.save_all()
 
     def guetAdd(self):
@@ -128,7 +128,7 @@ class GUI():
         command = self.commandMap.get_command('remove').build()
         command.play([remove_initial])
         self.fileSystem.save_all()
-                       
+
     def showRemove(self):
 
         for widget in self.view.winfo_children():

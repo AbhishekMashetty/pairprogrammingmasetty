@@ -9,6 +9,8 @@ from guet.commands import CommandMap
 from guet.git import GitProxy
 from guet.committers import Committers2, CurrentCommitters
 
+add = []
+
 class GUI():
 
     def __init__(self, cMap: CommandMap):
@@ -64,6 +66,7 @@ class GUI():
 
         #Main loop
         self.root.mainloop()
+
     
     def guetYeet(self):
         command = self.commandMap.get_command('yeet').build()
@@ -73,7 +76,7 @@ class GUI():
     
     def guetInit(self):
         command = self.commandMap.get_command('init').build()
-        command.play([])
+        command.play(add)
         self.fileSystem.save_all()
 
     def guetAdd(self):
@@ -130,7 +133,7 @@ class GUI():
         command = self.commandMap.get_command('remove').build()
         command.play([remove_initial])
         self.fileSystem.save_all()
-                       
+
     def showRemove(self):
 
         for widget in self.view.winfo_children():

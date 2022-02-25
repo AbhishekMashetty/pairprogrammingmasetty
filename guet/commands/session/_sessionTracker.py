@@ -33,7 +33,6 @@ class SessionTrackerAction(Action):
             if path.is_file():
                 with open(path) as sessionFile:
                     sessionRecords = sessionFile.readlines()
-                    i=0
                 for session in sessionRecords:
                     if str(project_path) == session.split(',')[-1].strip("\n\\"):
                         sessionExist = True

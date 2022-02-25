@@ -1,14 +1,12 @@
 from typing import List
 import urllib.request as http
 import json
-
-#from guet.committers import Committers2 as Committers
-#from guet.committers import CommittersPrinter, CurrentCommitters
 from guet.steps.action import Action
 from guet.commands.add import _add_committer
 from guet.files import FileSystem
 from guet.commands import CommandMap
 from guet.committers import Committers2, CurrentCommitters
+from guet.committers.committer import Committer
 
 
 class SetTaiga(Action):
@@ -23,17 +21,8 @@ class SetTaiga(Action):
         self.authToken = ''
         file_system = FileSystem()
         committers = Committers2(file_system)
-        #self.committers = committers
-        #self.current_committers = current_committers
 
     def execute(self, args: List[str]):
-        # lowercase_args = [arg.lower() for arg in args]
-        # found = [c for c in self.committers.all() if c.initials in lowercase_args]
-        # self.current_committers.set(found)
-        # printer = CommittersPrinter(initials_only=False)
-
-        #print('WIP: Taiga tool integration')
-        #print(args)
         if args[0]=='members':
             user = input('Enter username:')
             pwd = input('Password:')
@@ -41,7 +30,6 @@ class SetTaiga(Action):
             slug = input('Project slug:')
             self.getMembers(slug)
  
-
     def get(self, url):
         req = http.Request(url = url)
         if self.authToken:
@@ -62,20 +50,6 @@ class SetTaiga(Action):
             #print(data)
             return data
 
-    # def getMembers(self, projectSlug):
-    #     memberData=[]
-    #     projectData = self.get(self.getProjectURL + projectSlug)
-    #     print(projectData)
-    #     print('This project has ' + str(len(projectData['members'])) +' members. They are:')
-    #     for person in projectData['members']:
-    #         print(person['full_name'] + ' : ' + person['role_name'])
-    #     flag = input("Do you want to save the team members? (Y/N): ")
-    #     if flag == 'Y':
-    #         for person in projectData['members']:
-    #             memberData.append(person['full_name'])
-    #         print(memberData)
-    #     return memberData
-    
     def getMembers(self, projectSlug):
         memberData=[]
         userNames = []
@@ -97,20 +71,23 @@ class SetTaiga(Action):
         self.saveCommitters(userNames, email)
         return memberData
     
-    
+    def saveCommitters(self, firstNames, emails):
+        filesystem = FileSystem()
+        committers = Committers2(filesystem)
+        firstNames=firstNames
+        emails=emails
+        initials = []
+        for i in firstNames:
+            initials.append(i[:3]+"1")
+        for i in range(len(firstNames)):
+            print("Entered into actual ")
+            committer = Committer(firstNames[i], emails[i], initials[i])
+            committer = committers.add(committer)
         
-
-
-       
     def login(self, username, password):
-        #f = open('config.json')
-
-        #config = json.load(f)
-
         data = {
             'username': username,
             'password': password,
             'type': 'normal'
         }
         self.authToken = self.post(self.loginURL, data)['auth_token']
-        #f.close() 

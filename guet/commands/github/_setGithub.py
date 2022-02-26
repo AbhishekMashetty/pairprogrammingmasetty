@@ -5,7 +5,7 @@ import json, os, requests
 from guet.steps.action import Action
 
 class SetGithub(Action):
-    token = os.getenv('GITHUB_TOKEN', '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')
+    token = os.getenv('GITHUB_TOKEN', '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')
     owner = "AbhishekMashetty"
     repo = "assign-git"
     query_url = f"https://api.github.com/repos/{owner}/{repo}/issues"
@@ -31,13 +31,12 @@ class SetGithub(Action):
             print("Invalid Command")
 
     def getdata(self):
-        print("Entered the getdata")
         resp = requests.get(SetGithub.query_url, headers=SetGithub.headers, params=SetGithub.params)
         output = resp.json()
         output_map = {}
         for i in output:
             for key,val in i.items():
                 output_map[i["title"]] = i["body"]
-        return output_map
-
-
+        
+        for key in output_map:
+            print("#Issue number: ",key, "\n", output_map[key])

@@ -1,5 +1,4 @@
 from typing import List
-
 from guet.committers import Committers2 as Committers
 from guet.committers.committer import Committer
 from guet.steps.action import Action

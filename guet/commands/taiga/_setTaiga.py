@@ -1,11 +1,13 @@
 from typing import List
 import urllib.request as http
 import json
-
-#from guet.committers import Committers2 as Committers
-#from guet.committers import CommittersPrinter, CurrentCommitters
 from guet.steps.action import Action
-
+from guet.commands.add import _add_committer
+from guet.files import FileSystem
+from guet.commands import CommandMap
+from guet.committers import Committers2, CurrentCommitters
+from guet.committers.committer import Committer
+from getpass import getpass
 
 class SetTaiga(Action):
     rootURL = 'https://api.taiga.io/api/v1'
@@ -17,34 +19,23 @@ class SetTaiga(Action):
     def __init__(self):
         super().__init__()
         self.authToken = ''
-        #self.committers = committers
-        #self.current_committers = current_committers
+        file_system = FileSystem()
+        committers = Committers2(file_system)
 
     def execute(self, args: List[str]):
-        # lowercase_args = [arg.lower() for arg in args]
-        # found = [c for c in self.committers.all() if c.initials in lowercase_args]
-        # self.current_committers.set(found)
-        # printer = CommittersPrinter(initials_only=False)
-
-        #print('WIP: Taiga tool integration')
-        #print(args)
         if args[0]=='members':
             user = input('Enter username:')
-            pwd = input('Password:')
+            pwd = getpass()
             self.login(user, pwd)
             slug = input('Project slug:')
             self.getMembers(slug)
-
-
-    
-
+ 
     def get(self, url):
         req = http.Request(url = url)
         if self.authToken:
             req.add_header("Authorization", "Bearer " + self.authToken)
         with http.urlopen(req) as res:
             data = json.loads(res.read().decode('utf-8'))
-            #print(data)
             return data
 
     def post(self, url, body):
@@ -55,25 +46,44 @@ class SetTaiga(Action):
         if len(self.authToken): req.add_header("Authorization", "Bearer " + self.authToken)
         with http.urlopen(req) as res:
             data = json.loads(res.read().decode("utf-8"))
-            #print(data)
             return data
 
     def getMembers(self, projectSlug):
+        memberData=[]
+        userNames = []
         projectData = self.get(self.getProjectURL + projectSlug)
         print('This project has ' + str(len(projectData['members'])) +' members. They are:')
         for person in projectData['members']:
+            userNames.append(person["username"])
+        for person in projectData['members']:
             print(person['full_name'] + ' : ' + person['role_name'])
-
-
+        flag = input("Do you want to save the team members? (Y/N): ")
+        if flag == 'Y':
+            email=[]
+            for person in projectData['members']:
+                memberData.append(person['full_name'])
+            for i in userNames:
+                email.append(i+"@asu.edu")
+        self.saveCommitters(userNames, email)
+        return memberData
+    
+    def saveCommitters(self, firstNames, emails):
+        filesystem = FileSystem()
+        committers = Committers2(filesystem)
+        firstNames=firstNames
+        emails=emails
+        initials = []
+        for i in firstNames:
+            initials.append(i[0:2]+"1")
+        for i in range(len(firstNames)):
+            committer = Committer(firstNames[i], emails[i], initials[i])
+            committer = committers.add(committer)
+        print("All the taiga members are set as committers. Check using guet get all command")
+        
     def login(self, username, password):
-        #f = open('config.json')
-
-        #config = json.load(f)
-
         data = {
             'username': username,
             'password': password,
             'type': 'normal'
         }
         self.authToken = self.post(self.loginURL, data)['auth_token']
-        #f.close() 

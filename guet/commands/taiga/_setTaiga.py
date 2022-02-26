@@ -7,7 +7,7 @@ from guet.files import FileSystem
 from guet.commands import CommandMap
 from guet.committers import Committers2, CurrentCommitters
 from guet.committers.committer import Committer
-
+from getpass import getpass
 
 class SetTaiga(Action):
     rootURL = 'https://api.taiga.io/api/v1'
@@ -25,7 +25,7 @@ class SetTaiga(Action):
     def execute(self, args: List[str]):
         if args[0]=='members':
             user = input('Enter username:')
-            pwd = input('Password:')
+            pwd = getpass()
             self.login(user, pwd)
             slug = input('Project slug:')
             self.getMembers(slug)

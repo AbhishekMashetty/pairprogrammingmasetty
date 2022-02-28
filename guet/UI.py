@@ -8,6 +8,7 @@ from guet.commands import CommandMap
 from guet.git import GitProxy
 from guet.committers import Committers2, CurrentCommitters
 from guet.commands.set._set_committers import SetCommittersAction
+import tkinter.messagebox
 
 
 class GUI():
@@ -69,6 +70,10 @@ class GUI():
 
         #Main loop
         self.root.mainloop()
+
+    
+    def showAlert(self, title, message):
+        tkinter.messagebox.showinfo(title,  message)
 
     
     def guetYeet(self):
@@ -180,6 +185,7 @@ class GUI():
         textBox.insert(1.0, text)
         textBox.config(state=DISABLED)
         self.fileSystem.save_all()
+        self.showAlert("GUET", "Task failed successfully")
 
     def showSet(self):
         for widget in self.view.winfo_children():

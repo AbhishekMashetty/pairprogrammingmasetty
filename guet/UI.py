@@ -79,13 +79,13 @@ class GUI():
     def guetYeet(self):
         command = self.commandMap.get_command('yeet').build()
         command.play([])
-
         self.fileSystem.save_all()
-    
-    def guetInit(self):
+
+    def guetInit(self):        
         command = self.commandMap.get_command('init').build()
         command.play([])
         self.fileSystem.save_all()
+        self.showAlert('GUET Initialization', 'Git initialized in this directory')
 
     def guetAdd(self):
 
@@ -95,6 +95,7 @@ class GUI():
         command = self.commandMap.get_command('add').build()
         command.play([initial, name, email])
         self.fileSystem.save_all()
+        #self.showAlert('ADD', 'Added success')
         
 
     def showAdd(self):
@@ -127,6 +128,8 @@ class GUI():
         button = Button(self.view, text = "Add commiter", height=2, width=10, command = self.guetAdd)
         button.grid(row=7, column=1)
 
+    
+
     def guetRemove(self, textEntry):
 
         for c in self.committers.all():
@@ -137,7 +140,7 @@ class GUI():
                 textEntry.delete(0, END)
                 self.showAlert('REMOVE', 'Committer removed successfully.')
                 return
-        
+
         self.showAlert('REMOVE', 'This committer does not exitst')
             
 
@@ -196,7 +199,6 @@ class GUI():
         buttonCurrent = Button(self.view, text="Set", height=2, width=10, command=lambda: self.guetSet(textEntry)) 
         buttonCurrent.pack(side=TOP, anchor='n')
 
-
     def guetSet(self, textEntry):
         input = textEntry.get()
         initials = input.split(' ')
@@ -206,3 +208,12 @@ class GUI():
                 cList.append(c.lower())
         setAction = SetCommittersAction(self.committers, self.currentCommitters)
         setAction.execute(cList)
+        """
+        for c in self.committers.all():
+            if c in cList:
+                textEntry.delete(0, END)
+                self.showAlert('SET', 'Committer set successfully.')
+                return
+
+        self.showAlert('SET', 'This committer does not exitst')
+        """

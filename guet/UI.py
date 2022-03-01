@@ -127,12 +127,19 @@ class GUI():
         button = Button(self.view, text = "Add commiter", height=2, width=10, command = self.guetAdd)
         button.grid(row=7, column=1)
 
-    def guetRemove(self):
+    def guetRemove(self, textEntry):
 
-        remove_initial = self.inp[0].get()
-        command = self.commandMap.get_command('remove').build()
-        command.play([remove_initial])
-        self.fileSystem.save_all()
+        for c in self.committers.all():
+            if c.initials == textEntry.get():
+                command = self.commandMap.get_command('remove').build()
+                command.play([textEntry.get()])
+                self.fileSystem.save_all()
+                textEntry.delete(0, END)
+                self.showAlert('REMOVE', 'Committer removed successfully.')
+                return
+        
+        self.showAlert('REMOVE', 'This committer does not exitst')
+            
 
     def showRemove(self):
 
@@ -145,17 +152,9 @@ class GUI():
         Initial = Entry(self.view, borderwidth = 3)
         Initial.grid(row=4, column=0)
 
-        button = Button(self.view, text = "Remove", height=2, width=10, command = self.guetRemove)
+        button = Button(self.view, text = "Remove", height=2, width=10, command = lambda: self.guetRemove(Initial)) 
         button.grid(row=5, column=0)
-        self.inp = [Initial]
-        newLabel = Label(self.view, text = "\t\t\t\t\t\t\t\t")
-        newLabel.pack()
-        textBox = Text(self.view, state='disabled', height=10, width=40) #, 
-        buttonCurrent = Button(self.view, text="get current", height=2, width=10, command=lambda: self.guetGet('current', textBox)) 
-        buttonAll = Button(self.view, text="get all", height=2, width=10, command=lambda: self.guetGet('all', textBox))
-        buttonCurrent.pack(side=TOP, anchor='n')
-        buttonAll.pack(side=TOP, anchor='n')
-        textBox.pack()
+
 
     def showGet(self):
 
@@ -185,7 +184,6 @@ class GUI():
         textBox.insert(1.0, text)
         textBox.config(state=DISABLED)
         self.fileSystem.save_all()
-        self.showAlert("GUET", "Task failed successfully")
 
     def showSet(self):
         for widget in self.view.winfo_children():

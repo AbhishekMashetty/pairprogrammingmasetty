@@ -1,5 +1,5 @@
 from typing import List
-
+import requests, json
 from guet.steps.action import Action
 
 
@@ -14,3 +14,5 @@ class RemoveCommitterAction(Action):
             print(f'No committer exists with initials {args[0]}')
         else:
             self.committers.remove(committer.initials)
+            
+

@@ -1,6 +1,6 @@
 from guet.committers.committer import Committer
 from guet.files import FileSystem
-
+import json, requests
 from ._global_committer_state import GlobalCommittersState
 from ._local_committers_state import LocalCommittersState
 
@@ -29,7 +29,14 @@ class Committers:
         return self.current_state.by_initials(initials.lower())
 
     def add(self, committer: Committer):
+        headers = {'Content-type': 'application/json',}
+        message = committer.name+" is added as a committer"
+        temp = {"text": message}
+        data = json.dumps(temp)
+        requests.post('https://hooks.slack.com/services/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', headers=headers, data=data)
         self.current_state.add(committer)
+        
+        
 
     def remove(self, initials: str):
         self.current_state.remove(initials)

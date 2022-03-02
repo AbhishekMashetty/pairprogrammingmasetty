@@ -9,6 +9,7 @@ class RemoveCommitterAction(Action):
         self.committers = committers
 
     def execute(self, args: List[str]):
+        #Testing for guet commit issue
         committer = self.committers.by_initials(args[0])
         if not committer:
             print(f'No committer exists with initials {args[0]}')

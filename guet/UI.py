@@ -80,6 +80,8 @@ class GUI():
         command = self.commandMap.get_command('yeet').build()
         command.play([])
         self.fileSystem.save_all()
+        self.showAlert('Remove guet configuration', 'Guet successfully uninstalled from this directory, bye!')
+    
 
     def guetInit(self):        
         command = self.commandMap.get_command('init').build()

@@ -194,26 +194,21 @@ class GUI():
         
         newLabel = Label(self.view, text = "\t\t\t\t\t\t\t\t")
         newLabel.pack()
-        textEntry = Entry(self.view, width=40) #, 
+        textEntry = Entry(self.view, width=40) 
         textEntry.pack()
         buttonCurrent = Button(self.view, text="Set", height=2, width=10, command=lambda: self.guetSet(textEntry)) 
         buttonCurrent.pack(side=TOP, anchor='n')
 
     def guetSet(self, textEntry):
-        input = textEntry.get()
-        initials = input.split(' ')
-        cList=[]
-        for c in initials:
-            if len(c):
-                cList.append(c.lower())
-        setAction = SetCommittersAction(self.committers, self.currentCommitters)
-        setAction.execute(cList)
-        """
+
         for c in self.committers.all():
-            if c in cList:
+            if c.initials == textEntry.get():
+                command = self.commandMap.get_command('set').build()
+                command.play([textEntry.get()])
+                self.fileSystem.save_all()
                 textEntry.delete(0, END)
-                self.showAlert('SET', 'Committer set successfully.')
+                self.showAlert('REMOVE', 'Committer setsuccessfully.')
                 return
 
-        self.showAlert('SET', 'This committer does not exitst')
-        """
+        self.showAlert('REMOVE', 'This committer does not exitst')
+            

@@ -9,11 +9,23 @@ class RemoveCommitterAction(Action):
         self.committers = committers
 
     def execute(self, args: List[str]):
-        #Testing for guet commit issue
         committer = self.committers.by_initials(args[0])
+        headers = {'Content-type': 'application/json',}
         if not committer:
             print(f'No committer exists with initials {args[0]}')
         else:
             self.committers.remove(committer.initials)
+            message = args[0]+" is removed as a committer"
+            temp = {"text": message}
+            data = json.dumps(temp)
+            requests.post('https://hooks.slack.com/services/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', headers=headers, data=data)
+            
+    # def execute(self, args: List[str]):
+    #     #Testing for guet commit issue
+    #     committer = self.committers.by_initials(args[0])
+    #     if not committer:
+    #         print(f'No committer exists with initials {args[0]}')
+    #     else:
+    #         self.committers.remove(committer.initials)
             
 

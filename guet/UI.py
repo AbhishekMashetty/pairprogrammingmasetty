@@ -89,15 +89,23 @@ class GUI():
         self.fileSystem.save_all()
         self.showAlert('GUET Initialization', 'Git initialized in this directory')
 
-    def guetAdd(self):
+    def guetAdd(self, inputs):
 
-        initial = self.inputs[0].get()
-        name = self.inputs[1].get()
-        email = self.inputs[2].get()
+        initial = inputs[0].get()
+        name = inputs[1].get()
+        email = inputs[2].get()
+
+        for c in self.committers.all():
+            if c.initials == initial:
+                self.showAlert("ERROR", "A committer with these initials already exists.")
+                return
+        
         command = self.commandMap.get_command('add').build()
         command.play([initial, name, email])
         self.fileSystem.save_all()
-        #self.showAlert('ADD', 'Added success')
+        self.showAlert('ADD', 'Committer added')
+        for textEntry in inputs:
+            textEntry.delete(0, END)
         
 
     def showAdd(self):
@@ -127,7 +135,7 @@ class GUI():
         pName.grid(row=4, column=1 )
         pEmail.grid(row=5, column=1)
 
-        button = Button(self.view, text = "Add commiter", height=2, width=10, command = self.guetAdd)
+        button = Button(self.view, text = "Add commiter", height=2, width=10, command = lambda: self.guetAdd([pInitial, pName, pEmail]))
         button.grid(row=7, column=1)
 
     

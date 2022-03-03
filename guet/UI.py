@@ -210,15 +210,31 @@ class GUI():
         buttonCurrent.pack(side=TOP, anchor='n')
 
     def guetSet(self, textEntry):
+        sum = 0
+        list_initials = []
 
         for c in self.committers.all():
-            if c.initials == textEntry.get():
-                command = self.commandMap.get_command('set').build()
-                command.play([textEntry.get()])
-                self.fileSystem.save_all()
-                textEntry.delete(0, END)
-                self.showAlert('REMOVE', 'Committer setsuccessfully.')
-                return
+            list_initials.append(c.initials)
 
-        self.showAlert('REMOVE', 'This committer does not exitst')
+        input = textEntry.get()
+        initials = input.split(' ')
+        cList=[]
+        for c in initials:
+            if len(c):
+                cList.append(c.lower())
+        setAction = SetCommittersAction(self.committers, self.currentCommitters)
+        setAction.execute(cList)
+
+        for i in initials:
+            if i in list_initials:
+                sum += 0
+            else:
+                sum += 1
+
+        if sum == 0:
+            self.showAlert('SET', 'Committers set successfully.')
+
+        else:
+            self.showAlert("ERROR", "One or more committer(s) do(es) not exitst")
+     
             

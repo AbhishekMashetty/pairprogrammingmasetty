@@ -1,12 +1,13 @@
 from typing import List
 import urllib.request as http
-import json
+import json, requests
 from guet.steps.action import Action
 from guet.commands.add import _add_committer
 from guet.files import FileSystem
 from guet.commands import CommandMap
 from guet.committers import Committers2, CurrentCommitters
 from guet.committers.committer import Committer
+
 from getpass import getpass
 
 class SetTaiga(Action):
@@ -57,8 +58,8 @@ class SetTaiga(Action):
             userNames.append(person["username"])
         for person in projectData['members']:
             print(person['full_name'] + ' : ' + person['role_name'])
-        flag = input("Do you want to save the team members? (Y/N): ")
-        if flag == 'Y':
+        flag = input("Do you want to save the team members as committers? (Y/N): ")
+        if flag == 'Y' or flag == 'y':
             email=[]
             for person in projectData['members']:
                 memberData.append(person['full_name'])

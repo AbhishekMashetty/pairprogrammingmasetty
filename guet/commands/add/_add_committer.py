@@ -1,4 +1,5 @@
 from typing import List
+import requests, json
 from guet.committers import Committers2 as Committers
 from guet.committers.committer import Committer
 from guet.steps.action import Action
@@ -14,3 +15,6 @@ class AddCommitter(Action):
     def execute(self, args: List[str]):
         initials, name, email = Args(args).without_flags
         self.committers.add(Committer(name, email, initials))
+        
+
+

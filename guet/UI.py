@@ -8,6 +8,7 @@ from guet.commands import CommandMap
 from guet.git import GitProxy
 from guet.committers import Committers2, CurrentCommitters
 from guet.commands.set._set_committers import SetCommittersAction
+import tkinter.messagebox
 
 
 class GUI():
@@ -71,25 +72,45 @@ class GUI():
         self.root.mainloop()
 
     
+    def showAlert(self, title, message):
+        tkinter.messagebox.showinfo(title,  message)
+
+    
     def guetYeet(self):
         command = self.commandMap.get_command('yeet').build()
         command.play([])
-
         self.fileSystem.save_all()
+        self.showAlert('Remove guet configuration', 'Guet successfully uninstalled from this directory, bye!')
     
-    def guetInit(self):
+
+    def guetInit(self):        
         command = self.commandMap.get_command('init').build()
         command.play([])
         self.fileSystem.save_all()
+        self.showAlert('GUET Initialization', 'Git initialized in this directory')
 
-    def guetAdd(self):
+    def guetAdd(self, inputs):
 
-        initial = self.inputs[0].get()
-        name = self.inputs[1].get()
-        email = self.inputs[2].get()
+        initial = inputs[0].get()
+        name = inputs[1].get()
+        email = inputs[2].get()
+
+        for c in self.committers.all():
+            if c.initials == initial:
+                alertModal = tkinter.messagebox.askquestion('ADD', 'A committer with these initials already exists. Do you want to overwrite?')
+                if alertModal == 'yes':
+                    command = self.commandMap.get_command('remove').build()
+                    command.play([initial])
+                    self.fileSystem.save_all()
+                else:
+                    return
+        
         command = self.commandMap.get_command('add').build()
         command.play([initial, name, email])
         self.fileSystem.save_all()
+        self.showAlert('ADD', 'Committer added')
+        for textEntry in inputs:
+            textEntry.delete(0, END)
         
 
     def showAdd(self):
@@ -119,15 +140,24 @@ class GUI():
         pName.grid(row=4, column=1 )
         pEmail.grid(row=5, column=1)
 
-        button = Button(self.view, text = "Add commiter", height=2, width=10, command = self.guetAdd)
+        button = Button(self.view, text = "Add commiter", height=2, width=10, command = lambda: self.guetAdd([pInitial, pName, pEmail]))
         button.grid(row=7, column=1)
 
-    def guetRemove(self):
+    
 
-        remove_initial = self.inp[0].get()
-        command = self.commandMap.get_command('remove').build()
-        command.play([remove_initial])
-        self.fileSystem.save_all()
+    def guetRemove(self, textEntry):
+
+        for c in self.committers.all():
+            if c.initials == textEntry.get():
+                command = self.commandMap.get_command('remove').build()
+                command.play([textEntry.get()])
+                self.fileSystem.save_all()
+                textEntry.delete(0, END)
+                self.showAlert('REMOVE', 'Committer removed successfully.')
+                return
+
+        self.showAlert('REMOVE', 'This committer does not exitst')
+            
 
     def showRemove(self):
 
@@ -140,17 +170,9 @@ class GUI():
         Initial = Entry(self.view, borderwidth = 3)
         Initial.grid(row=4, column=0)
 
-        button = Button(self.view, text = "Remove", height=2, width=10, command = self.guetRemove)
+        button = Button(self.view, text = "Remove", height=2, width=10, command = lambda: self.guetRemove(Initial)) 
         button.grid(row=5, column=0)
-        self.inp = [Initial]
-        newLabel = Label(self.view, text = "\t\t\t\t\t\t\t\t")
-        newLabel.pack()
-        textBox = Text(self.view, state='disabled', height=10, width=40) #, 
-        buttonCurrent = Button(self.view, text="get current", height=2, width=10, command=lambda: self.guetGet('current', textBox)) 
-        buttonAll = Button(self.view, text="get all", height=2, width=10, command=lambda: self.guetGet('all', textBox))
-        buttonCurrent.pack(side=TOP, anchor='n')
-        buttonAll.pack(side=TOP, anchor='n')
-        textBox.pack()
+
 
     def showGet(self):
 
@@ -187,13 +209,18 @@ class GUI():
         
         newLabel = Label(self.view, text = "\t\t\t\t\t\t\t\t")
         newLabel.pack()
-        textEntry = Entry(self.view, width=40) #, 
+        textEntry = Entry(self.view, width=40) 
         textEntry.pack()
         buttonCurrent = Button(self.view, text="Set", height=2, width=10, command=lambda: self.guetSet(textEntry)) 
         buttonCurrent.pack(side=TOP, anchor='n')
 
-
     def guetSet(self, textEntry):
+        sum = 0
+        list_initials = []
+
+        for c in self.committers.all():
+            list_initials.append(c.initials)
+
         input = textEntry.get()
         initials = input.split(' ')
         cList=[]
@@ -202,3 +229,17 @@ class GUI():
                 cList.append(c.lower())
         setAction = SetCommittersAction(self.committers, self.currentCommitters)
         setAction.execute(cList)
+
+        for i in initials:
+            if i in list_initials:
+                sum += 0
+            else:
+                sum += 1
+
+        if sum == 0:
+            self.showAlert('SET', 'Committers set successfully.')
+
+        else:
+            self.showAlert("ERROR", "One or more committer(s) do(es) not exitst")
+     
+            

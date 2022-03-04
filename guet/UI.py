@@ -8,6 +8,7 @@ from guet.commands import CommandMap
 from guet.git import GitProxy
 from guet.committers import Committers2, CurrentCommitters
 from guet.commands.set._set_committers import SetCommittersAction
+import tkinter.messagebox
 
 
 class GUI():
@@ -82,14 +83,28 @@ class GUI():
         command.play([])
         self.fileSystem.save_all()
 
-    def guetAdd(self):
+    def guetAdd(self, inputs):
 
-        initial = self.inputs[0].get()
-        name = self.inputs[1].get()
-        email = self.inputs[2].get()
+        initial = inputs[0].get()
+        name = inputs[1].get()
+        email = inputs[2].get()
+
+        for c in self.committers.all():
+            if c.initials == initial:
+                alertModal = tkinter.messagebox.askquestion('ADD', 'A committer with these initials already exists. Do you want to overwrite?')
+                if alertModal == 'yes':
+                    command = self.commandMap.get_command('remove').build()
+                    command.play([initial])
+                    self.fileSystem.save_all()
+                else:
+                    return
+        
         command = self.commandMap.get_command('add').build()
         command.play([initial, name, email])
         self.fileSystem.save_all()
+        self.showAlert('ADD', 'Committer added')
+        for textEntry in inputs:
+            textEntry.delete(0, END)
         
 
     def showAdd(self):

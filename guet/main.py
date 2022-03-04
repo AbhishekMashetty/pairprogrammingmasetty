@@ -64,4 +64,3 @@ def main():
         command.play(args[1:])
 
         file_system.save_all()
-

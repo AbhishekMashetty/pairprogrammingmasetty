@@ -97,8 +97,13 @@ class GUI():
 
         for c in self.committers.all():
             if c.initials == initial:
-                self.showAlert("ERROR", "A committer with these initials already exists.")
-                return
+                alertModal = tkinter.messagebox.askquestion('ADD', 'A committer with these initials already exists. Do you want to overwrite?')
+                if alertModal == 'yes':
+                    command = self.commandMap.get_command('remove').build()
+                    command.play([initial])
+                    self.fileSystem.save_all()
+                else:
+                    return
         
         command = self.commandMap.get_command('add').build()
         command.play([initial, name, email])

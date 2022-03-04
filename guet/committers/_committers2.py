@@ -33,7 +33,9 @@ class Committers:
         message = committer.name+" is added as a committer"
         temp = {"text": message}
         data = json.dumps(temp)
-        requests.post('https://hooks.slack.com/services/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', headers=headers, data=data)
+        with open('''/Users/abhishek/Assignments/Spring'22/SER516/Project/pairprogrammingmasetty/guet/webhook.json''', 'r') as f:
+            temp = json.loads(f.read())
+        requests.post(temp["URL"], headers=headers, data=data)
         self.current_state.add(committer)
         
         

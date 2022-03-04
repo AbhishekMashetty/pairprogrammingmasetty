@@ -17,6 +17,8 @@ class RemoveCommitterAction(Action):
             message = args[0]+" is removed as a committer"
             temp = {"text": message}
             data = json.dumps(temp)
-            requests.post('https://hooks.slack.com/services/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', headers=headers, data=data)
+            with open('PATH TO THE FILE WHICH HAS WEBHOOK OF SLACK CHANNEL', 'r') as f:
+                url = json.loads(f.read())
+            requests.post(url["URL"], headers=headers, data=data)
             self.committers.remove(committer.initials)
 

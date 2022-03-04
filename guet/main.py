@@ -10,7 +10,6 @@ from guet.commands.set import SetCommittersCommand
 from guet.commands.yeet import YeetCommandFactory
 from guet.commands.taiga import TaigaCommands
 from guet.commands.session import SessionCommandFactory
-from guet.commands.developerkarma import DeveloperKarmaCommandFactory
 from guet.commands.github import GithubCommands
 from guet.committers import Committers2, CurrentCommitters
 from guet.files import FileSystem
@@ -45,8 +44,6 @@ def main():
         file_system, committers, current_committers, git), 'Integrate taiga')
     command_map.add_command('session', SessionCommandFactory(
         file_system, committers, current_committers, git), 'Pair-Programming Session Tracker')  
-    command_map.add_command('developerkarma', DeveloperKarmaCommandFactory(
-        file_system, committers, current_committers, git), 'Pair-Programming Developer Karma')  
     command_map.add_command('github', GithubCommands(
         file_system, committers, current_committers, git), 'Get Issues from github')
     command_map.add_command('yeet',
@@ -67,4 +64,3 @@ def main():
         command.play(args[1:])
 
         file_system.save_all()
-
